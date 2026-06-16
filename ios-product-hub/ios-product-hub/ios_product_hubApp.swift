@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct ios_product_hubApp: App {
+    @StateObject private var appState = AppState()
+    private let container = AppDIContainer()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView(container: container)
+                .environmentObject(appState)
         }
     }
 }
