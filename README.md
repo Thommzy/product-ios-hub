@@ -1,6 +1,3 @@
-```markdown
-# ios-product-hub
-
 A modern iOS product catalog app built with clean architecture, 
 SwiftUI/UIKit, offline-first design, and secure authentication.
 
@@ -196,4 +193,3 @@ use cases. Cover load success, failure, delete, filter, and favorites."*
 
 - The app has not been tested on iPad. Layout may break on 
   larger screen sizes.
-```
