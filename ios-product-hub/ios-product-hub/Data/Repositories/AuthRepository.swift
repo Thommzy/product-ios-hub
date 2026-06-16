@@ -10,8 +10,8 @@ import Foundation
 final class AuthRepository: AuthRepositoryProtocol {
     private let keychainService: KeychainServiceProtocol
     private let tokenKey = "auth_token"
-    private let validUsername = "emilys"
-    private let validPassword = "emilyspass"
+    private let validUsername = "timothy"
+    private let validPassword = "pass123word"
 
     init(keychainService: KeychainServiceProtocol) {
         self.keychainService = keychainService
