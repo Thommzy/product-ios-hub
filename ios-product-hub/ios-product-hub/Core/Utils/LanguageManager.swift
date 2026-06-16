@@ -16,12 +16,12 @@ final class LanguageManager: ObservableObject {
             UserDefaults.standard.set(currentLanguage, forKey: "appLanguage")
             UserDefaults.standard.set([currentLanguage], forKey: "AppleLanguages")
             UserDefaults.standard.synchronize()
+            // force views to rebuild
+            objectWillChange.send()
         }
     }
 
     var isRTL: Bool { currentLanguage == "he" }
-
-    var locale: Locale { Locale(identifier: currentLanguage) }
 
     private init() {
         self.currentLanguage = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"

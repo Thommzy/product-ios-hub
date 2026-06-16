@@ -14,7 +14,7 @@ struct SortFilterView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Sort By") {
+                Section("sort_by".localized) {
                     ForEach(SortOption.allCases, id: \.self) { option in
                         HStack {
                             Text(option.rawValue)
@@ -28,7 +28,7 @@ struct SortFilterView: View {
                     }
                 }
 
-                Section("Filter by Category") {
+                Section("filter_by_category".localized) {
                     ForEach(viewModel.categories, id: \.self) { cat in
                         HStack {
                             Text(cat.capitalized)
@@ -42,11 +42,11 @@ struct SortFilterView: View {
                     }
                 }
             }
-            .navigationTitle("Sort & Filter")
+            .navigationTitle("sort_filter".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") { dismiss() }
+                    Button("done".localized) { dismiss() }
                 }
             }
         }

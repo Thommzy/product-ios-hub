@@ -9,13 +9,14 @@ import SwiftUI
 
 struct UndoToastView: View {
     let onUndo: () -> Void
+    @EnvironmentObject var languageManager: LanguageManager
 
     var body: some View {
         HStack {
-            Text("Product removed from favorites")
+            Text("product_removed".localized)
                 .font(.subheadline)
             Spacer()
-            Button("Undo", action: onUndo)
+            Button("undo".localized, action: onUndo)
                 .fontWeight(.semibold)
         }
         .padding()

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AddEditProductView: View {
+    @EnvironmentObject var languageManager: LanguageManager
     @ObservedObject var viewModel: ProductListViewModel
     let product: Product?
     @Environment(\.dismiss) var dismiss
@@ -23,27 +24,27 @@ struct AddEditProductView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Product Info") {
-                    TextField("Title", text: $title)
-                    TextField("Category", text: $category)
-                    TextField("Price", text: $price)
+                Section("product_info".localized) {
+                    TextField("title".localized, text: $title)
+                    TextField("category".localized, text: $category)
+                    TextField("price".localized, text: $price)
                         .keyboardType(.decimalPad)
-                    TextField("Stock", text: $stock)
+                    TextField("stock".localized, text: $stock)
                         .keyboardType(.numberPad)
                 }
-                Section("Description") {
+                Section("description".localized) {
                     TextEditor(text: $description)
                         .frame(minHeight: 100)
                 }
             }
-            .navigationTitle(isEditing ? "Edit Product" : "Add Product")
+            .navigationTitle(isEditing ? "edit_product".localized : "add_product".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") { dismiss() }
+                    Button("cancel".localized, role: .cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") { save() }
+                    Button("save".localized) { save() }
                         .disabled(title.isEmpty || price.isEmpty)
                 }
             }

@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 
 struct FavoritesView: View {
+    @EnvironmentObject var languageManager: LanguageManager
     @StateObject var viewModel: FavoritesViewModel
 
     var body: some View {
@@ -18,9 +19,9 @@ struct FavoritesView: View {
                     ProgressView()
                 } else if viewModel.favoriteProducts.isEmpty {
                     ContentUnavailableView(
-                        "No Favorites",
+                        "no_favorites".localized,
                         systemImage: "heart.slash",
-                        description: Text("Add products to your favorites.")
+                        description: Text("add_products_to_favorites".localized)
                     )
                 } else {
                     List {
@@ -35,7 +36,7 @@ struct FavoritesView: View {
                                 Button(role: .destructive) {
                                     viewModel.remove(product: product)
                                 } label: {
-                                    Label("Remove", systemImage: "heart.slash")
+                                    Label("remove".localized, systemImage: "heart.slash")
                                 }
                             }
                         }
@@ -43,7 +44,7 @@ struct FavoritesView: View {
                     .listStyle(.plain)
                 }
             }
-            .navigationTitle("Favorites")
+            .navigationTitle("favorites".localized)
             .task { await viewModel.load() }
             .overlay(alignment: .bottom) {
                 if viewModel.recentlyRemoved != nil {

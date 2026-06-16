@@ -19,7 +19,7 @@ final class LoginViewController: UIViewController {
 
     private let usernameField: UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Username"
+        tf.placeholder = "username".localized
         tf.borderStyle = .roundedRect
         tf.autocapitalizationType = .none
         tf.autocorrectionType = .no
@@ -29,7 +29,7 @@ final class LoginViewController: UIViewController {
 
     private let passwordField: UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Password"
+        tf.placeholder = "password".localized
         tf.borderStyle = .roundedRect
         tf.isSecureTextEntry = true
         tf.returnKeyType = .done
@@ -38,7 +38,7 @@ final class LoginViewController: UIViewController {
 
     private let loginButton: UIButton = {
         var config = UIButton.Configuration.filled()
-        config.title = "Sign In"
+        config.title = "sign_in".localized
         config.cornerStyle = .medium
         let btn = UIButton(configuration: config)
         return btn
@@ -47,7 +47,7 @@ final class LoginViewController: UIViewController {
     private let biometricButton: UIButton = {
         var config = UIButton.Configuration.bordered()
         config.image = UIImage(systemName: "faceid")
-        config.title = "Use Face ID"
+        config.title = "use_face_id".localized
         config.imagePlacement = .leading
         config.imagePadding = 8
         config.cornerStyle = .medium

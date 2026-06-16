@@ -21,3 +21,6 @@
 "edit_product" = "ערוך מוצר";
 "no_favorites" = "אין מועדפים";
 "retry" = "נסה שוב";
+"add_products_to_favorites" = "הוסף מוצרים למועדפים שלך.";
+"product_removed" = "המוצר הוסר מהמועדפים";
+"undo" = "בטל";

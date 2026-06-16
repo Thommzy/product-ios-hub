@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ProductDetailView: View {
+    @EnvironmentObject var languageManager: LanguageManager
     let product: Product
     @ObservedObject var viewModel: ProductListViewModel
     @State private var showEdit = false
@@ -53,7 +54,7 @@ struct ProductDetailView: View {
                         if product.discountPercentage > 0 {
                             Text("$\(product.price, specifier: "%.2f")")
                                 .strikethrough().foregroundStyle(.secondary)
-                            Text("\(product.discountPercentage, specifier: "%.0f")% off")
+                            Text("\(product.discountPercentage, specifier: "%.0f")% \("off".localized)")
                                 .font(.caption).foregroundStyle(.orange)
                         }
                     }
@@ -62,24 +63,24 @@ struct ProductDetailView: View {
 
                     Divider()
 
-                    Text("Description")
+                    Text("description".localized)
                         .font(.headline)
                     Text(product.description)
                         .foregroundStyle(.secondary)
 
                     Divider()
 
-                    infoRow("Brand", product.brand ?? "N/A")
-                    infoRow("SKU", product.sku)
-                    infoRow("Stock", "\(product.stock) units")
-                    infoRow("Status", product.availabilityStatus)
-                    infoRow("Warranty", product.warrantyInformation)
-                    infoRow("Shipping", product.shippingInformation)
-                    infoRow("Return Policy", product.returnPolicy)
+                    infoRow("brand".localized, product.brand ?? "na".localized)
+                    infoRow("sku".localized, product.sku)
+                    infoRow("stock".localized, "\(product.stock) \("units".localized)")
+                    infoRow("status".localized, product.availabilityStatus)
+                    infoRow("warranty".localized, product.warrantyInformation)
+                    infoRow("shipping".localized, product.shippingInformation)
+                    infoRow("return_policy".localized, product.returnPolicy)
 
                     Divider()
 
-                    Text("Reviews (\(product.reviews.count))")
+                    Text("\("reviews".localized) (\(product.reviews.count))")
                         .font(.headline)
 
                     ForEach(product.reviews, id: \.reviewerEmail) { review in
@@ -92,7 +93,7 @@ struct ProductDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Edit") { showEdit = true }
+                Button("edit".localized) { showEdit = true }
             }
         }
         .sheet(isPresented: $showEdit) {

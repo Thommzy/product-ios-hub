@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ProductListView: View {
+    @EnvironmentObject var languageManager: LanguageManager
     @StateObject var viewModel: ProductListViewModel
     @State private var showAddProduct = false
     @State private var selectedProduct: Product? = nil
@@ -17,7 +18,7 @@ struct ProductListView: View {
         NavigationStack {
             Group {
                 if viewModel.isLoading && viewModel.products.isEmpty {
-                    ProgressView("Loading products...")
+                    ProgressView("loading_products".localized)
                 } else if let error = viewModel.errorMessage, viewModel.products.isEmpty {
                     ErrorView(message: error) {
                         Task { await viewModel.loadInitial() }
@@ -26,8 +27,8 @@ struct ProductListView: View {
                     productList
                 }
             }
-            .navigationTitle("Products")
-            .searchable(text: $viewModel.searchQuery, prompt: "Search products")
+            .navigationTitle("products".localized)
+            .searchable(text: $viewModel.searchQuery, prompt: "search_products".localized)
             .onSubmit(of: .search) {
                 Task { await viewModel.search() }
             }
@@ -36,7 +37,7 @@ struct ProductListView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Reset") { Task { await viewModel.resetLocalChanges() } }
+                    Button("reset".localized) { Task { await viewModel.resetLocalChanges() } }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     HStack {
@@ -81,14 +82,14 @@ struct ProductListView: View {
                     Button(role: .destructive) {
                         viewModel.deleteProduct(product)
                     } label: {
-                        Label("Delete", systemImage: "trash")
+                        Label("delete".localized, systemImage: "trash")
                     }
                 }
                 .swipeActions(edge: .leading) {
                     Button {
                         selectedProduct = product
                     } label: {
-                        Label("Edit", systemImage: "pencil")
+                        Label("edit".localized, systemImage: "pencil")
                     }
                     .tint(.blue)
                 }

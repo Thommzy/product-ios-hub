@@ -21,3 +21,6 @@
 "edit_product" = "Edit Product";
 "no_favorites" = "No Favorites";
 "retry" = "Retry";
+"add_products_to_favorites" = "Add products to your favorites.";
+"product_removed" = "Product removed from favorites";
+"undo" = "Undo";

@@ -1,0 +1,67 @@
+/* 
+  Localizable.strings (English)
+  ios-product-hub
+  
+  Created by Timothy Obeisun on 6/16/26.
+*/
+
+// MARK: - General
+"retry" = "Retry";
+"cancel" = "Cancel";
+"save" = "Save";
+"edit" = "Edit";
+"delete" = "Delete";
+"done" = "Done";
+"reset" = "Reset";
+
+// MARK: - Navigation & Titles
+"products" = "Products";
+"favorites" = "Favorites";
+
+// MARK: - Product List
+"loading_products" = "Loading products...";
+"search_products" = "Search products";
+
+// MARK: - Product Detail
+"description" = "Description";
+"brand" = "Brand";
+"sku" = "SKU";
+"stock" = "Stock";
+"units" = "units";
+"status" = "Status";
+"warranty" = "Warranty";
+"shipping" = "Shipping";
+"return_policy" = "Return Policy";
+"reviews" = "Reviews";
+"off" = "off";
+"na" = "N/A";
+
+// MARK: - Add/Edit Product
+"add_product" = "Add Product";
+"edit_product" = "Edit Product";
+"product_info" = "Product Info";
+"title" = "Title";
+"category" = "Category";
+"price" = "Price";
+
+// MARK: - Sort & Filter
+"sort_filter" = "Sort & Filter";
+"sort_by" = "Sort By";
+"filter_by_category" = "Filter by Category";
+
+// MARK: - Favorites
+"no_favorites" = "No Favorites";
+"add_products_to_favorites" = "Add products to favorites to see them here";
+"remove" = "Remove";
+
+// MARK: - Login (UIKit)
+"username" = "Username";
+"password" = "Password";
+"sign_in" = "Sign In";
+"use_face_id" = "Use Face ID";
+"use_touch_id" = "Use Touch ID";
+"biometric_auth" = "Biometric Authentication";
+
+// MARK: - Undo Toast
+"removed" = "Removed";
+"undo" = "Undo";

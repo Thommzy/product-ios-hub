@@ -1,0 +1,67 @@
+/* 
+  Localizable.strings (Hebrew)
+  ios-product-hub
+  
+  Created by Timothy Obeisun on 6/16/26.
+*/
+
+// MARK: - General
+"retry" = "נסה שוב";
+"cancel" = "ביטול";
+"save" = "שמור";
+"edit" = "ערוך";
+"delete" = "מחק";
+"done" = "סיום";
+"reset" = "אפס";
+
+// MARK: - Navigation & Titles
+"products" = "מוצרים";
+"favorites" = "מועדפים";
+
+// MARK: - Product List
+"loading_products" = "טוען מוצרים...";
+"search_products" = "חפש מוצרים";
+
+// MARK: - Product Detail
+"description" = "תיאור";
+"brand" = "מותג";
+"sku" = "מק״ט";
+"stock" = "מלאי";
+"units" = "יחידות";
+"status" = "סטטוס";
+"warranty" = "אחריות";
+"shipping" = "משלוח";
+"return_policy" = "מדיניות החזרה";
+"reviews" = "ביקורות";
+"off" = "הנחה";
+"na" = "לא זמין";
+
+// MARK: - Add/Edit Product
+"add_product" = "הוסף מוצר";
+"edit_product" = "ערוך מוצר";
+"product_info" = "פרטי המוצר";
+"title" = "כותרת";
+"category" = "קטגוריה";
+"price" = "מחיר";
+
+// MARK: - Sort & Filter
+"sort_filter" = "מיון וסינון";
+"sort_by" = "מיין לפי";
+"filter_by_category" = "סנן לפי קטגוריה";
+
+// MARK: - Favorites
+"no_favorites" = "אין מועדפים";
+"add_products_to_favorites" = "הוסף מוצרים למועדפים כדי לראות אותם כאן";
+"remove" = "הסר";
+
+// MARK: - Login (UIKit)
+"username" = "שם משתמש";
+"password" = "סיסמה";
+"sign_in" = "התחבר";
+"use_face_id" = "השתמש ב-Face ID";
+"use_touch_id" = "השתמש ב-Touch ID";
+"biometric_auth" = "אימות ביומטרי";
+
+// MARK: - Undo Toast
+"removed" = "הוסר";
+"undo" = "בטל";

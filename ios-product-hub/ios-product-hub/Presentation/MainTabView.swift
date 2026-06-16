@@ -10,6 +10,7 @@ import SwiftUI
 struct MainTabView: View {
     let container: AppDIContainer
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var languageManager: LanguageManager
 
     var body: some View {
         TabView {
@@ -21,7 +22,9 @@ struct MainTabView: View {
                     crudUseCase: container.crudUseCase
                 )
             )
-            .tabItem { Label("Products", systemImage: "square.grid.2x2") }
+            .tabItem {
+                Label("products".localized, systemImage: "square.grid.2x2")
+            }
 
             FavoritesView(
                 viewModel: FavoritesViewModel(
@@ -29,12 +32,22 @@ struct MainTabView: View {
                     favoritesUseCase: container.favoritesUseCase
                 )
             )
-            .tabItem { Label("Favorites", systemImage: "heart") }
+            .tabItem {
+                Label("favorites".localized, systemImage: "heart")
+            }
 
             SettingsView(
-                viewModel: SettingsViewModel(authRepository: container.authRepository)
+                viewModel: SettingsViewModel(
+                    authRepository: container.authRepository
+                )
             )
-            .tabItem { Label("Settings", systemImage: "gearshape") }
+            .tabItem {
+                Label("settings".localized, systemImage: "gearshape")
+            }
         }
+        .environment(
+            \.layoutDirection,
+            languageManager.isRTL ? .rightToLeft : .leftToRight
+        )
     }
 }
