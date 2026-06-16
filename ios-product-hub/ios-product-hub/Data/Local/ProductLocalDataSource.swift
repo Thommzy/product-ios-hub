@@ -6,6 +6,7 @@
 //
 
 import SwiftData
+import Foundation
 
 protocol ProductLocalDataSource {
     func fetchAll() -> [Product]
