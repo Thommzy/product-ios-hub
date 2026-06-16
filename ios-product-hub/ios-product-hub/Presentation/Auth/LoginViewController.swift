@@ -7,30 +7,15 @@
 
 import UIKit
 import Combine
+import SwiftUI
 
 final class LoginViewController: UIViewController {
     private let viewModel: LoginViewModel
     private var cancellables = Set<AnyCancellable>()
     var onLoginSuccess: (() -> Void)?
+    private var logoHostingController: UIHostingController<AnimatedLogoView>?
 
     // MARK: - UI
-    private let logoLabel: UILabel = {
-        let label = UILabel()
-        label.text = "ProductHub"
-        label.font = .systemFont(ofSize: 32, weight: .bold)
-        label.textAlignment = .center
-        label.textColor = .label
-        return label
-    }()
-
-    private let subtitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Sign in to continue"
-        label.font = .systemFont(ofSize: 16)
-        label.textAlignment = .center
-        label.textColor = .secondaryLabel
-        return label
-    }()
 
     private let usernameField: UITextField = {
         let tf = UITextField()
@@ -99,28 +84,47 @@ final class LoginViewController: UIViewController {
 
     private func setupUI() {
         view.backgroundColor = .systemBackground
+
+        // SwiftUI logo via UIHostingController
+        let logoView = AnimatedLogoView()
+        let hostingVC = UIHostingController(rootView: logoView)
+        logoHostingController = hostingVC
+
+        addChild(hostingVC)
+        hostingVC.view.backgroundColor = .clear
+        hostingVC.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(hostingVC.view)
+        hostingVC.didMove(toParent: self)
+
         usernameField.delegate = self
         passwordField.delegate = self
 
-        let stack = UIStackView(arrangedSubviews: [
-            logoLabel, subtitleLabel,
-            usernameField, passwordField,
-            errorLabel, loginButton,
+        let formStack = UIStackView(arrangedSubviews: [
+            usernameField,
+            passwordField,
+            errorLabel,
+            loginButton,
             biometricButton,
             activityIndicator
         ])
-        stack.axis = .vertical
-        stack.spacing = 12
-        stack.setCustomSpacing(4, after: logoLabel)
-        stack.setCustomSpacing(24, after: subtitleLabel)
-        stack.setCustomSpacing(16, after: passwordField)
-        stack.translatesAutoresizingMaskIntoConstraints = false
+        formStack.axis = .vertical
+        formStack.spacing = 12
+        formStack.translatesAutoresizingMaskIntoConstraints = false
 
-        view.addSubview(stack)
+        view.addSubview(formStack)
+
         NSLayoutConstraint.activate([
-            stack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            // SwiftUI logo at top
+            hostingVC.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            hostingVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostingVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            hostingVC.view.heightAnchor.constraint(equalToConstant: 160),
+
+            // Form below logo
+            formStack.topAnchor.constraint(equalTo: hostingVC.view.bottomAnchor, constant: 32),
+            formStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            formStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+
             usernameField.heightAnchor.constraint(equalToConstant: 48),
             passwordField.heightAnchor.constraint(equalToConstant: 48),
             loginButton.heightAnchor.constraint(equalToConstant: 48),
@@ -137,7 +141,7 @@ final class LoginViewController: UIViewController {
             .sink { [weak self] loading in
                 self?.loginButton.isEnabled = !loading
                 loading ? self?.activityIndicator.startAnimating()
-                        : self?.activityIndicator.stopAnimating()
+                : self?.activityIndicator.stopAnimating()
             }
             .store(in: &cancellables)
 
