@@ -81,14 +81,7 @@ final class LoginViewController: UIViewController {
     }()
 
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
-    private let hintLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Demo: emilys / emilyspass"
-        label.font = .systemFont(ofSize: 12)
-        label.textColor = .tertiaryLabel
-        label.textAlignment = .center
-        return label
-    }()
+
 
     init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
@@ -113,7 +106,7 @@ final class LoginViewController: UIViewController {
             logoLabel, subtitleLabel,
             usernameField, passwordField,
             errorLabel, loginButton,
-            biometricButton, hintLabel,
+            biometricButton,
             activityIndicator
         ])
         stack.axis = .vertical

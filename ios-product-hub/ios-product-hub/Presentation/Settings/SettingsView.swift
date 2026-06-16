@@ -11,30 +11,31 @@ import Combine
 struct SettingsView: View {
     @StateObject var viewModel: SettingsViewModel
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var languageManager: LanguageManager
     @AppStorage("appColorScheme") private var colorScheme: String = "system"
-    @AppStorage("appLanguage") private var language: String = "en"
     @State private var showLogoutAlert = false
+    @State private var showRestartAlert = false
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("Appearance") {
-                    Picker("Theme", selection: $colorScheme) {
-                        Text("System").tag("system")
-                        Text("Light").tag("light")
-                        Text("Dark").tag("dark")
+                Section("appearance".localized) {
+                    Picker("theme".localized, selection: $colorScheme) {
+                        Text("system".localized).tag("system")
+                        Text("light".localized).tag("light")
+                        Text("dark".localized).tag("dark")
                     }
                     .pickerStyle(.segmented)
                 }
 
-                Section("Language") {
-                    Picker("Language", selection: $language) {
+                Section("language".localized) {
+                    Picker("language".localized, selection: $languageManager.currentLanguage) {
                         Text("English").tag("en")
                         Text("עברית").tag("he")
                     }
                     .pickerStyle(.segmented)
-                    .onChange(of: language) { _, new in
-                        UserDefaults.standard.set([new], forKey: "AppleLanguages")
+                    .onChange(of: languageManager.currentLanguage) { _, _ in
+                        showRestartAlert = true
                     }
                 }
 
@@ -44,21 +45,25 @@ struct SettingsView: View {
                     } label: {
                         HStack {
                             Spacer()
-                            Text("Sign Out")
+                            Text("sign_out".localized)
                             Spacer()
                         }
                     }
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle("settings".localized)
             .preferredColorScheme(resolvedColorScheme)
-            .alert("Sign Out", isPresented: $showLogoutAlert) {
-                Button("Cancel", role: .cancel) {}
-                Button("Sign Out", role: .destructive) {
+            .environment(\.layoutDirection, languageManager.isRTL ? .rightToLeft : .leftToRight)
+            .alert("sign_out".localized, isPresented: $showLogoutAlert) {
+                Button("cancel".localized, role: .cancel) {}
+                Button("sign_out".localized, role: .destructive) {
                     viewModel.logout(appState: appState)
                 }
+            }
+            .alert("Language Changed", isPresented: $showRestartAlert) {
+                Button("OK") {}
             } message: {
-                Text("Are you sure you want to sign out?")
+                Text("Please restart the app to apply the new language.")
             }
         }
     }

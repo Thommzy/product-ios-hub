@@ -21,9 +21,13 @@ final class LoginViewModelTests: XCTestCase {
     }
 
     func test_login_success() async {
-        sut.username = "emilys"
-        sut.password = "emilyspass"
-        await sut.login()
+        sut.username = "timothy"
+        sut.password = "pass123word"
+        sut.login()
+        
+        // Wait for the async task to complete
+        try? await Task.sleep(for: .milliseconds(100))
+        
         XCTAssertTrue(sut.isLoggedIn)
         XCTAssertNil(sut.errorMessage)
     }
@@ -32,7 +36,11 @@ final class LoginViewModelTests: XCTestCase {
         mockLogin.shouldFail = true
         sut.username = "wrong"
         sut.password = "wrong"
-        await sut.login()
+        sut.login()
+        
+        // Wait for the async task to complete
+        try? await Task.sleep(for: .milliseconds(100))
+        
         XCTAssertFalse(sut.isLoggedIn)
         XCTAssertNotNil(sut.errorMessage)
     }
