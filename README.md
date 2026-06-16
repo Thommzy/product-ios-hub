@@ -190,6 +190,3 @@ use cases. Cover load success, failure, delete, filter, and favorites."*
 - Hebrew RTL layout is applied at the view level but some UIKit 
   components in the login screen do not fully respect RTL 
   without additional configuration.
-
-- The app has not been tested on iPad. Layout may break on 
-  larger screen sizes.
