@@ -17,6 +17,10 @@ struct FavoritesView: View {
             Group {
                 if viewModel.isLoading {
                     ProgressView()
+                } else if let error = viewModel.errorMessage {
+                    ErrorView(message: error) {
+                        Task { await viewModel.load() }
+                    }
                 } else if viewModel.favoriteProducts.isEmpty {
                     ContentUnavailableView(
                         "no_favorites".localized,
@@ -36,7 +40,7 @@ struct FavoritesView: View {
                                 Button(role: .destructive) {
                                     viewModel.remove(product: product)
                                 } label: {
-                                    Label("remove".localized, systemImage: "heart.slash")
+                                    Label("delete".localized, systemImage: "heart.slash")
                                 }
                             }
                         }

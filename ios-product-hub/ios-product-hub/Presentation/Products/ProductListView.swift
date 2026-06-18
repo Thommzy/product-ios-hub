@@ -33,7 +33,11 @@ struct ProductListView: View {
                 Task { await viewModel.search() }
             }
             .onChange(of: viewModel.searchQuery) { _, new in
-                if new.isEmpty { Task { await viewModel.loadInitial() } }
+                if new.isEmpty {
+                    Task { await viewModel.loadInitial() }
+                } else {
+                    viewModel.debouncedSearch()
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {

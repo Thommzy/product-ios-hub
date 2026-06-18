@@ -12,6 +12,7 @@ import Combine
 final class FavoritesViewModel: ObservableObject {
     @Published var favoriteProducts: [Product] = []
     @Published var isLoading: Bool = false
+    @Published var errorMessage: String? = nil
     @Published var recentlyRemoved: (product: Product, index: Int)? = nil
 
     private let fetchUseCase: FetchProductsUseCase
@@ -24,11 +25,16 @@ final class FavoritesViewModel: ObservableObject {
 
     func load() async {
         isLoading = true
+        errorMessage = nil
         let ids = favoritesUseCase.getFavoriteIds()
         do {
             let response = try await fetchUseCase.execute(limit: 100, skip: 0)
             favoriteProducts = response.products.filter { ids.contains($0.id) }
-        } catch {}
+        } catch is CancellationError {
+            // ignore
+        } catch {
+            errorMessage = error.localizedDescription
+        }
         isLoading = false
     }
 

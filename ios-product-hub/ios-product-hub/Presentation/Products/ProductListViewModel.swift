@@ -26,6 +26,9 @@ final class ProductListViewModel: ObservableObject {
     @Published var sortOption: SortOption = .none
     @Published var hasMore: Bool = true
 
+    private var searchTask: Task<Void, Never>? = nil
+    private var debounceTask: Task<Void, Never>? = nil
+
     private var currentSkip: Int = 0
     private let limit: Int = 20
     private var isLoadingMore: Bool = false
@@ -80,22 +83,28 @@ final class ProductListViewModel: ObservableObject {
     }
 
     private func load() async {
+        guard !Task.isCancelled else { return }
         isLoadingMore = true
         isLoading = products.isEmpty
 
         do {
             let response: ProductResponse
             if searchQuery.isEmpty {
-                response = try await fetchUseCase.execute(limit: limit, skip: currentSkip)
+                response = try await fetchUseCase.execute(
+                    limit: limit, skip: currentSkip
+                )
             } else {
                 response = try await searchUseCase.execute(
                     query: searchQuery, limit: limit, skip: currentSkip
                 )
             }
+            guard !Task.isCancelled else { return }
             products.append(contentsOf: response.products)
             currentSkip += response.products.count
             hasMore = products.count < response.total
             errorMessage = nil
+        } catch is CancellationError {
+            // silently ignore cancelled tasks
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -104,8 +113,24 @@ final class ProductListViewModel: ObservableObject {
         isLoadingMore = false
     }
 
+    // Called from .onChange on searchQuery
+    func debouncedSearch() {
+        debounceTask?.cancel()
+        debounceTask = Task {
+            // wait 400ms — if cancelled before then, skip
+            try? await Task.sleep(nanoseconds: 400_000_000)
+            guard !Task.isCancelled else { return }
+            await search()
+        }
+    }
+
     func search() async {
-        await loadInitial()
+        // cancel any in-flight search
+        searchTask?.cancel()
+        searchTask = Task {
+            await loadInitial()
+        }
+        await searchTask?.value
     }
 
     func toggleFavorite(product: Product) {
