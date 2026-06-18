@@ -85,6 +85,18 @@ final class ProductListViewModel: ObservableObject {
         loadMoreTask?.cancel()
     }
 
+    func productAdded(_ product: Product) {
+        products.insert(product, at: 0)
+        applyFiltersAndSort()
+    }
+
+    func productUpdated(_ product: Product) {
+        if let idx = products.firstIndex(where: { $0.id == product.id }) {
+            products[idx] = product
+        }
+        applyFiltersAndSort()
+    }
+
     func loadInitial() async {
         currentSkip = 0
         products = []
@@ -122,18 +134,15 @@ final class ProductListViewModel: ObservableObject {
             currentSkip += response.products.count
             hasMore = products.count < response.total
             errorMessage = nil
-
-            products.append(contentsOf: response.products)
-            applyFiltersAndSort()
+            applyFiltersAndSort() // ← add this
         } catch is CancellationError {
-            // silently ignore cancelled tasks
+            // ignore
         } catch {
             errorMessage = error.localizedDescription
         }
 
         isLoading = false
         isLoadingMore = false
-
     }
 
     // Called from .onChange on searchQuery
@@ -175,6 +184,7 @@ final class ProductListViewModel: ObservableObject {
         do {
             let fresh = try await crudUseCase.resetLocalChanges()
             products = fresh
+            applyFiltersAndSort() // ← add this
         } catch {
             errorMessage = error.localizedDescription
         }

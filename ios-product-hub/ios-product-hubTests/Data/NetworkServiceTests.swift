@@ -19,6 +19,7 @@ final class NetworkServiceTests: XCTestCase {
         sut = NetworkService(session: mockSession)
     }
 
+    @MainActor
     func test_request_success_decodesResponse() async throws {
         let products = [Product.mock()]
         let response = ProductResponse(
@@ -40,6 +41,7 @@ final class NetworkServiceTests: XCTestCase {
         XCTAssertEqual(result.products.count, 1)
     }
 
+    @MainActor
     func test_request_badStatusCode_throwsHTTPError() async {
         MockURLProtocol.requestHandler = { request in
             let response = HTTPURLResponse(
@@ -62,6 +64,7 @@ final class NetworkServiceTests: XCTestCase {
         }
     }
 
+    @MainActor
     func test_request_invalidJSON_throwsDecodingError() async {
         MockURLProtocol.requestHandler = { request in
             let response = HTTPURLResponse(

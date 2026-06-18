@@ -88,12 +88,12 @@ struct AddEditProductView: View {
         )
 
         if isEditing {
-            viewModel.crudUseCase.updateProduct(newProduct)
+            viewModel.productUpdated(newProduct)
             if let idx = viewModel.products.firstIndex(where: { $0.id == newProduct.id }) {
                 viewModel.products[idx] = newProduct
             }
         } else {
-            viewModel.crudUseCase.addProduct(newProduct)
+            viewModel.productAdded(newProduct)
             viewModel.products.insert(newProduct, at: 0)
         }
         dismiss()
