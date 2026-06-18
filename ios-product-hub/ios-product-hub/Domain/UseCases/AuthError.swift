@@ -9,6 +9,7 @@ import Foundation
 
 enum AuthError: LocalizedError {
     case emptyFields
+    case usernameTooShort
     case passwordTooShort
     case invalidCredentials
     case biometricFailed
@@ -16,7 +17,8 @@ enum AuthError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .emptyFields: return "Username and password are required"
-        case .passwordTooShort: return "Password must be at least 4 characters"
+        case .usernameTooShort: return "Username must be at least 3 characters"
+        case .passwordTooShort: return "Password must be at least 6 characters"
         case .invalidCredentials: return "Invalid username or password"
         case .biometricFailed: return "Biometric authentication failed"
         }

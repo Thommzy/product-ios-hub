@@ -17,11 +17,27 @@ final class SwiftDataStack {
             ProductEntity.self,
             FavoriteEntity.self
         ])
-        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let config = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false
+        )
         do {
             container = try ModelContainer(for: schema, configurations: config)
         } catch {
-            fatalError("Failed to create SwiftData container: \(error)")
+            // If persistent store fails, fall back to in-memory
+            // This prevents a crash while still giving the app a usable state
+            do {
+                let fallbackConfig = ModelConfiguration(
+                    schema: schema,
+                    isStoredInMemoryOnly: true
+                )
+                container = try ModelContainer(
+                    for: schema,
+                    configurations: fallbackConfig
+                )
+            } catch {
+                fatalError("SwiftData failed to initialise even in-memory: \(error)")
+            }
         }
     }
 

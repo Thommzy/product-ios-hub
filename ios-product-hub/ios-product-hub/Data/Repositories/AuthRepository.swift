@@ -7,11 +7,17 @@
 
 import Foundation
 
+// Credentials are validated locally for demo purposes.
+// In production this would call a real auth endpoint over HTTPS.
+
 final class AuthRepository: AuthRepositoryProtocol {
     private let keychainService: KeychainServiceProtocol
     private let tokenKey = "auth_token"
-    private let validUsername = "timothy"
-    private let validPassword = "pass123word"
+
+    private enum Credentials {
+        static let username = "timothy"
+        static let password = "pass123word"
+    }
 
     init(keychainService: KeychainServiceProtocol) {
         self.keychainService = keychainService
@@ -19,7 +25,8 @@ final class AuthRepository: AuthRepositoryProtocol {
 
     func login(username: String, password: String) async throws -> String {
         try await Task.sleep(nanoseconds: 800_000_000)
-        guard username == validUsername, password == validPassword else {
+        guard username == Credentials.username,
+              password == Credentials.password else {
             throw AuthError.invalidCredentials
         }
         let token = "token_\(UUID().uuidString)"

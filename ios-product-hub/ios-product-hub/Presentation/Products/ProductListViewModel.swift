@@ -22,9 +22,16 @@ final class ProductListViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     @Published var searchQuery: String = ""
-    @Published var selectedCategory: String = "All"
-    @Published var sortOption: SortOption = .none
+    @Published var selectedCategory: String = "All" {
+        didSet { applyFiltersAndSort() }
+    }
+
+    @Published var sortOption: SortOption = .none {
+        didSet { applyFiltersAndSort() }
+    }
+
     @Published var hasMore: Bool = true
+    @Published var filteredProducts: [Product] = []
 
     private var searchTask: Task<Void, Never>? = nil
     private var debounceTask: Task<Void, Never>? = nil
@@ -44,7 +51,8 @@ final class ProductListViewModel: ObservableObject {
         return ["All"] + cats.sorted()
     }
 
-    var filteredProducts: [Product] {
+
+    private func applyFiltersAndSort() {
         var result = products
         if selectedCategory != "All" {
             result = result.filter { $0.category == selectedCategory }
@@ -56,7 +64,7 @@ final class ProductListViewModel: ObservableObject {
         case .rating: result.sort { $0.rating > $1.rating }
         case .name: result.sort { $0.title < $1.title }
         }
-        return result
+        filteredProducts = result
     }
 
     init(
@@ -114,6 +122,9 @@ final class ProductListViewModel: ObservableObject {
             currentSkip += response.products.count
             hasMore = products.count < response.total
             errorMessage = nil
+
+            products.append(contentsOf: response.products)
+            applyFiltersAndSort()
         } catch is CancellationError {
             // silently ignore cancelled tasks
         } catch {
@@ -122,6 +133,7 @@ final class ProductListViewModel: ObservableObject {
 
         isLoading = false
         isLoadingMore = false
+
     }
 
     // Called from .onChange on searchQuery
