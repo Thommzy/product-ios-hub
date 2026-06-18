@@ -81,6 +81,23 @@ together on a single screen.
   switching, logout
 
 ---
+ 
+## 🧪 Testing
+ 
+Run with **⌘ + U**. Tests mirror the app architecture:
+ 
+| Area | Coverage |
+|---|---|
+| ProductListViewModel | Load, failure, delete, filter, favorites |
+| LoginViewModel | Success, failure |
+| LoginUseCase | Validation — empty, short, whitespace, valid |
+| FavoritesViewModel | Load, remove, undo, empty state |
+| ProductRepository | Fetch, offline fallback, CRUD, reset |
+| NetworkService | Success, HTTP errors, decoding failure |
+| Search & Pagination | Debounce, page appending, stop condition |
+| Offline Behaviour | Error state, recovery, reset |
+ 
+---
 
 ## AI Usage Report
 
