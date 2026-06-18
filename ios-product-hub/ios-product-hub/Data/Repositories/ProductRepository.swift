@@ -19,12 +19,18 @@ final class ProductRepository: ProductRepositoryProtocol {
             let response = try await remote.fetchProducts(limit: limit, skip: skip)
             if skip == 0 { await MainActor.run { local.save(response.products) } }
             return response
+        } catch is CancellationError {
+            throw CancellationError()
         } catch {
+            // network failed — try cache
             let cached = await MainActor.run { local.fetchAll() }
-            if !cached.isEmpty {
-                return ProductResponse(products: cached, total: cached.count, skip: 0, limit: cached.count)
-            }
-            throw error
+            guard !cached.isEmpty else { throw error }
+            return ProductResponse(
+                products: cached,
+                total: cached.count,
+                skip: 0,
+                limit: cached.count
+            )
         }
     }
 

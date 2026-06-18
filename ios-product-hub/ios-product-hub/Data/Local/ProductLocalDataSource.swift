@@ -24,18 +24,31 @@ final class ProductLocalDataSourceImpl: ProductLocalDataSource {
 
     func fetchAll() -> [Product] {
         let descriptor = FetchDescriptor<ProductEntity>()
-        return (try? context.fetch(descriptor))?.map { $0.toDomain() } ?? []
+        do {
+            return try context.fetch(descriptor).map { $0.toDomain() }
+        } catch {
+            print("SwiftData fetch error: \(error)")
+            return []
+        }
     }
 
     func save(_ products: [Product]) {
-        deleteAll()
-        products.forEach { context.insert(ProductEntity(from: $0)) }
-        try? context.save()
+        do {
+            deleteAll()
+            products.forEach { context.insert(ProductEntity(from: $0)) }
+            try context.save()
+        } catch {
+            print("SwiftData save error: \(error)")
+        }
     }
 
     func add(_ product: Product) {
-        context.insert(ProductEntity(from: product, isLocalOnly: true))
-        try? context.save()
+        do {
+            context.insert(ProductEntity(from: product, isLocalOnly: true))
+            try context.save()
+        } catch {
+            print("SwiftData add error: \(error)")
+        }
     }
 
     func update(_ product: Product) {
@@ -43,12 +56,16 @@ final class ProductLocalDataSourceImpl: ProductLocalDataSource {
         let descriptor = FetchDescriptor<ProductEntity>(
             predicate: #Predicate { $0.id == id }
         )
-        if let entity = try? context.fetch(descriptor).first {
-            entity.title = product.title
-            entity.price = product.price
-            entity.desc = product.description
-            entity.stock = product.stock
-            try? context.save()
+        do {
+            if let entity = try context.fetch(descriptor).first {
+                entity.title = product.title
+                entity.price = product.price
+                entity.desc = product.description
+                entity.stock = product.stock
+                try context.save()
+            }
+        } catch {
+            print("SwiftData update error: \(error)")
         }
     }
 
@@ -56,13 +73,21 @@ final class ProductLocalDataSourceImpl: ProductLocalDataSource {
         let descriptor = FetchDescriptor<ProductEntity>(
             predicate: #Predicate { $0.id == id }
         )
-        if let entity = try? context.fetch(descriptor).first {
-            context.delete(entity)
-            try? context.save()
+        do {
+            if let entity = try context.fetch(descriptor).first {
+                context.delete(entity)
+                try context.save()
+            }
+        } catch {
+            print("SwiftData delete error: \(error)")
         }
     }
 
     func deleteAll() {
-        try? context.delete(model: ProductEntity.self)
+        do {
+            try context.delete(model: ProductEntity.self)
+        } catch {
+            print("SwiftData deleteAll error: \(error)")
+        }
     }
 }

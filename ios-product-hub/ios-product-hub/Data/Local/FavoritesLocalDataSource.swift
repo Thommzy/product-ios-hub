@@ -21,22 +21,35 @@ final class FavoritesLocalDataSourceImpl: FavoritesLocalDataSource {
     init(stack: SwiftDataStack) { self.context = stack.context }
 
     func fetchAll() -> [Int] {
-        let descriptor = FetchDescriptor<FavoriteEntity>()
-        return (try? context.fetch(descriptor))?.map { $0.productId } ?? []
+        do {
+            return try context.fetch(FetchDescriptor<FavoriteEntity>())
+                .map { $0.productId }
+        } catch {
+            print("SwiftData favorites fetch error: \(error)")
+            return []
+        }
     }
 
     func add(productId: Int) {
-        context.insert(FavoriteEntity(productId: productId))
-        try? context.save()
+        do {
+            context.insert(FavoriteEntity(productId: productId))
+            try context.save()
+        } catch {
+            print("SwiftData favorites add error: \(error)")
+        }
     }
 
     func remove(productId: Int) {
         let descriptor = FetchDescriptor<FavoriteEntity>(
             predicate: #Predicate { $0.productId == productId }
         )
-        if let entity = try? context.fetch(descriptor).first {
-            context.delete(entity)
-            try? context.save()
+        do {
+            if let entity = try context.fetch(descriptor).first {
+                context.delete(entity)
+                try context.save()
+            }
+        } catch {
+            print("SwiftData favorites remove error: \(error)")
         }
     }
 
@@ -44,6 +57,11 @@ final class FavoritesLocalDataSourceImpl: FavoritesLocalDataSource {
         let descriptor = FetchDescriptor<FavoriteEntity>(
             predicate: #Predicate { $0.productId == productId }
         )
-        return (try? context.fetch(descriptor).first) != nil
+        do {
+            return try context.fetch(descriptor).first != nil
+        } catch {
+            print("SwiftData favorites contains error: \(error)")
+            return false
+        }
     }
 }
