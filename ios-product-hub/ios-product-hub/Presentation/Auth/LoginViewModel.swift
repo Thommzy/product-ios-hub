@@ -16,6 +16,7 @@ final class LoginViewModel: ObservableObject {
     @Published var errorMessage: String? = nil
     @Published var isLoggedIn: Bool = false
 
+    private var loginTask: Task<Void, Never>? = nil
     private let loginUseCase: LoginUseCase
     private let biometricUseCase: BiometricUseCase
     var canUseBiometrics: Bool { biometricUseCase.canUseBiometrics() }
@@ -25,30 +26,38 @@ final class LoginViewModel: ObservableObject {
         self.biometricUseCase = biometricUseCase
     }
 
+    deinit {
+        loginTask?.cancel()
+    }
+
+
     func login() {
-        Task {
-            isLoading = true
-            errorMessage = nil
+        loginTask?.cancel()
+        loginTask = Task {
+            await MainActor.run { isLoading = true; errorMessage = nil }
             do {
-                _ = try await loginUseCase.execute(username: username, password: password)
-                isLoggedIn = true
+                _ = try await loginUseCase.execute(
+                    username: username, password: password
+                )
+                await MainActor.run { isLoggedIn = true }
             } catch {
-                errorMessage = error.localizedDescription
+                await MainActor.run { errorMessage = error.localizedDescription }
             }
-            isLoading = false
+            await MainActor.run { isLoading = false }
         }
     }
 
     func loginWithBiometrics() {
-        Task {
-            isLoading = true
+        loginTask?.cancel()
+        loginTask = Task {
+            await MainActor.run { isLoading = true }
             do {
                 try await biometricUseCase.authenticate()
-                isLoggedIn = true
+                await MainActor.run { isLoggedIn = true }
             } catch {
-                errorMessage = error.localizedDescription
+                await MainActor.run { errorMessage = error.localizedDescription }
             }
-            isLoading = false
+            await MainActor.run { isLoading = false }
         }
     }
 }

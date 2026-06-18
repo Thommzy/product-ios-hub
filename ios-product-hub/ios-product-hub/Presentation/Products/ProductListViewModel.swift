@@ -28,6 +28,7 @@ final class ProductListViewModel: ObservableObject {
 
     private var searchTask: Task<Void, Never>? = nil
     private var debounceTask: Task<Void, Never>? = nil
+    private var loadMoreTask: Task<Void, Never>? = nil
 
     private var currentSkip: Int = 0
     private let limit: Int = 20
@@ -70,6 +71,12 @@ final class ProductListViewModel: ObservableObject {
         self.crudUseCase = crudUseCase
     }
 
+    deinit {
+        searchTask?.cancel()
+        debounceTask?.cancel()
+        loadMoreTask?.cancel()
+    }
+
     func loadInitial() async {
         currentSkip = 0
         products = []
@@ -79,7 +86,11 @@ final class ProductListViewModel: ObservableObject {
 
     func loadMore() async {
         guard hasMore, !isLoadingMore else { return }
-        await load()
+        loadMoreTask?.cancel()
+        loadMoreTask = Task {
+            await load()
+        }
+        await loadMoreTask?.value
     }
 
     private func load() async {
